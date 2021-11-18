@@ -3,10 +3,13 @@ import os
 from PIL import Image, ImageOps
 from multiprocessing import Process, Queue, cpu_count
 
+# bug fix in case your images requires to be larger than 30Mo for instance :
+Image.MAX_IMAGE_PIXELS = 2628000000
+
 # Change these 3 config parameters to suit your needs...
-TILE_SIZE      = 50		# height/width of mosaic tiles in pixels
-TILE_MATCH_RES = 5		# tile matching resolution (higher values give better fit but require more processing)
-ENLARGEMENT    = 8		# the mosaic image will be this many times wider and taller than the original
+TILE_SIZE      = 300		# height/width of mosaic tiles in pixels
+TILE_MATCH_RES = 10		# tile matching resolution (higher values give better fit but require more processing)
+ENLARGEMENT    = 50		# the mosaic image will be this many times wider and taller than the original
 
 TILE_BLOCK_SIZE = TILE_SIZE / max(min(TILE_MATCH_RES, TILE_SIZE), 1)
 WORKER_COUNT = max(cpu_count() - 1, 1)
@@ -46,7 +49,8 @@ class TileProcessor:
 		# search the tiles directory recursively
 		for root, subFolders, files in os.walk(self.tiles_directory):
 			for tile_name in files:
-				print('Reading {:40.40}'.format(tile_name), flush=True, end='\r')
+				print('Reading {tile_name}')
+				# print('Reading {:40.40}'.format(tile_name), flush=True, end='\r')
 				tile_path = os.path.join(root, tile_name)
 				large_tile, small_tile = self.__process_tile(tile_path)
 				if large_tile:
@@ -136,7 +140,8 @@ class ProgressCounter:
 
 	def update(self):
 		self.counter += 1
-		print("Progress: {:04.1f}%".format(100 * self.counter / self.total), flush=True, end='\r')
+		print("Progress: {:04.1f}%".format(100 * self.counter / self.total))
+		# print("Progress: {:04.1f}%".format(100 * self.counter / self.total), flush=True, end='\r')
 
 class MosaicImage:
 	def __init__(self, original_img):

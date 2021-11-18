@@ -30,3 +30,24 @@ Producing large, highly detailed mosaics can take some time - you should experim
 In particular the [TILE_MATCH_RES](https://github.com/codebox/mosaic/blob/master/mosaic.py#L8) parameter can have a big impact on both these factors - its value determines how closely the program examines each tile when trying to find the best fit for a particular segment of the image. Setting TILE_MATCH_RES to '1' simply finds the average colour of each tile, and picks the one that most closely matches the average colour of the image segment. As the value is increased, the tile is examined in more detail. Setting TILE_MATCH_RES to equal TILE_SIZE will cause the utility to examine each pixel in the tile individually, producing the best possible match (during my testing I didn't find a very noticeable improvement beyond a value of 5, but YMMV).
 
 By default the utility will configure itself to use all available CPUs/CPU-cores on the host system, if you want to leave some processing power spare for other tasks then adjust the [WORKER_COUNT](https://github.com/codebox/mosaic/blob/master/mosaic.py#L12) parameter accordingly.
+
+
+
+## Get images URL
+I use webscrapper.io to fetch some images URL I want ot target
+## Download images from Bulk URL
+Download your images URL in a CSV as formated bellow (last column must finish with '-src')
+```csv
+web-scraper-order,web-scraper-start-url,photo-src
+"1637225532-228","https://example.com/2018-photos/","https://exmaple.com/wp-content/uploads/andres-kudacki-thanksgiving-parade-top-100-photos-2018.jpg?quality=85&w=2160"
+```
+
+the type in your terminal
+```py
+python image-downloader.py photos.csv
+```
+
+
+## Credit
+
+Thanks to 2014 Rob Dawson for it's project from which this one is shamelessly based on
